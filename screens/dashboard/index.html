@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curator | Dashboard Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#acedff",
+              "on-secondary-container": "#006172",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#380d00",
+              "secondary": "#00687a",
+              "on-tertiary-container": "#ffa583",
+              "inverse-primary": "#b8c4ff",
+              "primary-fixed": "#dde1ff",
+              "on-primary-container": "#a8b8ff",
+              "secondary-fixed-dim": "#4cd7f6",
+              "tertiary-fixed-dim": "#ffb59a",
+              "surface-container-low": "#f3f4f5",
+              "on-primary-fixed-variant": "#173bab",
+              "outline": "#757684",
+              "outline-variant": "#c4c5d5",
+              "on-background": "#191c1d",
+              "primary-fixed-dim": "#b8c4ff",
+              "surface-container": "#edeeef",
+              "primary-container": "#1e40af",
+              "background": "#f8f9fa",
+              "tertiary-container": "#872d00",
+              "surface-dim": "#d9dadb",
+              "on-primary-fixed": "#001453",
+              "inverse-on-surface": "#f0f1f2",
+              "on-secondary-fixed-variant": "#004e5c",
+              "surface-container-highest": "#e1e3e4",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#001f26",
+              "on-tertiary-fixed-variant": "#802a00",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#57dffe",
+              "tertiary-fixed": "#ffdbce",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "on-secondary": "#ffffff",
+              "on-surface": "#191c1d",
+              "surface-container-high": "#e7e8e9",
+              "primary": "#00288e",
+              "surface-tint": "#3755c3",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#444653",
+              "tertiary": "#611e00",
+              "error-container": "#ffdad6",
+              "surface-bright": "#f8f9fa"
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Layout Container -->
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col p-6 space-y-4 h-screen w-64 border-r border-slate-100 dark:border-slate-800 bg-slate-50 sticky top-0">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">link</span>
+</div>
+<h1 class="text-xl font-black text-blue-900 font-headline">Digital Curator</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-3 px-4 py-3 text-blue-700 font-bold bg-white rounded-lg shadow-sm transition-all duration-200 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Links Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-100 hover:translate-x-1 transition-all duration-200 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">link</span>
+<span>Links</span>
+</a>
+<!-- Analytics Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-100 hover:translate-x-1 transition-all duration-200 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span>Analytics</span>
+</a>
+<!-- Settings Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-100 hover:translate-x-1 transition-all duration-200 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-primary-container transition-colors shadow-sm active:scale-95 duration-100">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Link</span>
+</button>
+<div class="p-3 bg-surface-container-low rounded-xl flex items-center gap-3">
+<img alt="User Avatar" class="w-10 h-10 rounded-full border border-white" data-alt="professional headshot of a smiling man with clean background soft studio lighting cinematic photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMG5XvWXtG7gu81PU53uXHptJNIjL6oEuuq05pxkCu3WHc5eQkySdKxD_bJ1iKUHYOj6Wbj36pdQgBBJJlRNxzkjrYuz8F7oy3twbCKz9FKkSl8Mhyn9cO6RtpGZg1FzOgLyXvAzyIzmJ9sb0gJZB1Z-v6vhoJ3-LdpBOa5s9B3oGpiZwLH-4vJlJmR-yIh0GxSUA10s2rf-Nkgx-jXBl_Q-_pTHMKHNs004lopIs665jjm3VKwgJqCKdVRgzbCD8wGlbSdQmfSJ8X"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-on-surface truncate">Premium Plan</p>
+<p class="text-[10px] text-on-surface-variant truncate">User Profile</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar -->
+<header class="w-full h-16 flex justify-between items-center px-6 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-slate-100">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-lowest border-none ring-1 ring-outline-variant/15 focus:ring-2 focus:ring-primary-container rounded-lg py-2 pl-10 pr-4 text-sm font-body outline-none transition-all" placeholder="Search analytics or links..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-6">
+<button class="p-2 text-slate-400 hover:bg-slate-50 rounded-full active:scale-95 duration-100 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-slate-50 rounded-full active:scale-95 duration-100 transition-all">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-100 mx-1"></div>
+<h2 class="font-headline font-bold text-xl text-blue-900 hidden lg:block">Analytics Overview</h2>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 space-y-8 max-w-[1600px] mx-auto w-full">
+<!-- Bento Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Total Clicks -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 group hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary-fixed rounded-lg text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mouse</span>
+</div>
+<span class="text-xs font-bold text-secondary flex items-center gap-1 bg-secondary-container/20 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                                12.5%
+                            </span>
+</div>
+<h3 class="text-on-surface-variant font-label text-xs uppercase tracking-widest font-bold">Total Clicks</h3>
+<p class="text-3xl font-headline font-extrabold text-on-surface mt-1">25,482</p>
+</div>
+<!-- Unique Visitors -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 group hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-fixed rounded-lg text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<span class="text-xs font-bold text-secondary flex items-center gap-1 bg-secondary-container/20 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                                8.1%
+                            </span>
+</div>
+<h3 class="text-on-surface-variant font-label text-xs uppercase tracking-widest font-bold">Unique Visitors</h3>
+<p class="text-3xl font-headline font-extrabold text-on-surface mt-1">18,120</p>
+</div>
+<!-- Active Links -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 group hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-surface-container-high rounded-lg text-on-surface">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">link</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant flex items-center gap-1 bg-surface-variant px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">horizontal_rule</span>
+                                Static
+                            </span>
+</div>
+<h3 class="text-on-surface-variant font-label text-xs uppercase tracking-widest font-bold">Active Links</h3>
+<p class="text-3xl font-headline font-extrabold text-on-surface mt-1">412</p>
+</div>
+<!-- Click-Through Rate -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 group hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-tertiary-fixed rounded-lg text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ads_click</span>
+</div>
+<span class="text-xs font-bold text-error flex items-center gap-1 bg-error-container/20 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+                                0.4%
+                            </span>
+</div>
+<h3 class="text-on-surface-variant font-label text-xs uppercase tracking-widest font-bold">Avg. CTR</h3>
+<p class="text-3xl font-headline font-extrabold text-on-surface mt-1">4.2%</p>
+</div>
+</div>
+<!-- Main Analytics Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Primary Chart: Clicks over Time -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10">
+<div class="flex justify-between items-center mb-10">
+<div>
+<h3 class="text-lg font-headline font-bold text-on-surface">Traffic Growth</h3>
+<p class="text-sm text-on-surface-variant">Daily clicks across all active assets</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-xs font-bold rounded-lg bg-surface-container-high text-on-surface">7 Days</button>
+<button class="px-3 py-1.5 text-xs font-bold rounded-lg hover:bg-surface-container text-on-surface-variant">30 Days</button>
+</div>
+</div>
+<!-- Abstract Line Chart Visualization -->
+<div class="h-64 flex items-end gap-2 px-2 relative">
+<!-- Background Grid -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-5">
+<div class="w-full h-px bg-on-surface"></div>
+<div class="w-full h-px bg-on-surface"></div>
+<div class="w-full h-px bg-on-surface"></div>
+<div class="w-full h-px bg-on-surface"></div>
+</div>
+<!-- Mock Data Points -->
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/20 cursor-pointer" style="height: 40%"></div>
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/20 cursor-pointer" style="height: 55%"></div>
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/20 cursor-pointer" style="height: 45%"></div>
+<div class="flex-1 bg-primary/20 rounded-t-lg transition-all hover:bg-primary/30 cursor-pointer" style="height: 70%"></div>
+<div class="flex-1 bg-primary/15 rounded-t-lg transition-all hover:bg-primary/25 cursor-pointer" style="height: 60%"></div>
+<div class="flex-1 bg-primary rounded-t-lg transition-all hover:opacity-80 cursor-pointer" style="height: 95%"></div>
+<div class="flex-1 bg-primary/30 rounded-t-lg transition-all hover:bg-primary/40 cursor-pointer" style="height: 75%"></div>
+<div class="flex-1 bg-primary/20 rounded-t-lg transition-all hover:bg-primary/30 cursor-pointer" style="height: 65%"></div>
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/20 cursor-pointer" style="height: 50%"></div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest px-2">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+<!-- Side Widget: Device Types -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10 flex flex-col">
+<h3 class="text-lg font-headline font-bold text-on-surface mb-2">Device Reach</h3>
+<p class="text-sm text-on-surface-variant mb-8">Audience distribution by platform</p>
+<div class="flex-1 flex flex-col justify-center items-center">
+<div class="relative w-48 h-48 mb-8">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<circle cx="18" cy="18" fill="transparent" r="16" stroke="#f3f4f5" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="transparent" r="16" stroke="#00288e" stroke-dasharray="65, 100" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="transparent" r="16" stroke="#00687a" stroke-dasharray="25, 100" stroke-dashoffset="-65" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="transparent" r="16" stroke="#872d00" stroke-dasharray="10, 100" stroke-dashoffset="-90" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-black text-on-surface">65%</span>
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Mobile</span>
+</div>
+</div>
+<div class="w-full space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-sm font-medium">Mobile</span>
+</div>
+<span class="text-sm font-bold">16.5k</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-sm font-medium">Desktop</span>
+</div>
+<span class="text-sm font-bold">6.4k</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<span class="text-sm font-medium">Tablet</span>
+</div>
+<span class="text-sm font-bold">2.5k</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Widget: Top Countries -->
+<div class="lg:col-span-3 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-lg font-headline font-bold text-on-surface">Geographic Influence</h3>
+<p class="text-sm text-on-surface-variant">Top performing regions by link engagement</p>
+</div>
+<button class="text-primary text-sm font-bold hover:underline flex items-center gap-1">
+                                View Full Map
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="space-y-3">
+<div class="flex justify-between text-sm font-bold mb-1">
+<span>United States</span>
+<span class="text-primary">42%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 42%"></div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm font-bold mb-1">
+<span>United Kingdom</span>
+<span class="text-primary">18%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 18%"></div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm font-bold mb-1">
+<span>Germany</span>
+<span class="text-primary">14%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 14%"></div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm font-bold mb-1">
+<span>Canada</span>
+<span class="text-primary">12%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 12%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Section -->
+<footer class="max-w-7xl mx-auto py-12 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col gap-1">
+<span class="font-headline font-bold text-blue-900">Curator</span>
+<p class="font-manrope text-xs text-slate-500">© 2024 Curator Link Management</p>
+</div>
+<div class="flex gap-8">
+<a class="font-manrope text-xs text-slate-500 hover:text-blue-600 hover:underline transition-all" href="#">Privacy</a>
+<a class="font-manrope text-xs text-slate-500 hover:text-blue-600 hover:underline transition-all" href="#">Terms</a>
+<a class="font-manrope text-xs text-slate-500 hover:text-blue-600 hover:underline transition-all" href="#">API Documentation</a>
+<a class="font-manrope text-xs text-slate-500 hover:text-blue-600 hover:underline transition-all" href="#">Contact</a>
+</div>
+</footer>
+</div>
+</main>
+</div>
+<!-- Mobile BottomNavBar -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-slate-100 flex justify-around items-center py-3 z-50">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">link</span>
+<span class="text-[10px] font-bold">Links</span>
+</a>
+<div class="relative -top-6">
+<button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[10px] font-bold">Analytics</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-bold">Settings</span>
+</a>
+</div>
+</body></html>

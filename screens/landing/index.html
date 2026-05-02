@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#acedff",
+              "on-secondary-container": "#006172",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#380d00",
+              "secondary": "#00687a",
+              "on-tertiary-container": "#ffa583",
+              "inverse-primary": "#b8c4ff",
+              "primary-fixed": "#dde1ff",
+              "on-primary-container": "#a8b8ff",
+              "secondary-fixed-dim": "#4cd7f6",
+              "tertiary-fixed-dim": "#ffb59a",
+              "surface-container-low": "#f3f4f5",
+              "on-primary-fixed-variant": "#173bab",
+              "outline": "#757684",
+              "outline-variant": "#c4c5d5",
+              "on-background": "#191c1d",
+              "primary-fixed-dim": "#b8c4ff",
+              "surface-container": "#edeeef",
+              "primary-container": "#1e40af",
+              "background": "#f8f9fa",
+              "tertiary-container": "#872d00",
+              "surface-dim": "#d9dadb",
+              "on-primary-fixed": "#001453",
+              "inverse-on-surface": "#f0f1f2",
+              "on-secondary-fixed-variant": "#004e5c",
+              "surface-container-highest": "#e1e3e4",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#001f26",
+              "on-tertiary-fixed-variant": "#802a00",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#57dffe",
+              "tertiary-fixed": "#ffdbce",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "on-secondary": "#ffffff",
+              "on-surface": "#191c1d",
+              "surface-container-high": "#e7e8e9",
+              "primary": "#00288e",
+              "surface-tint": "#3755c3",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#444653",
+              "tertiary": "#611e00",
+              "error-container": "#ffdad6",
+              "surface-bright": "#f8f9fa"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .editorial-shadow {
+            box-shadow: 0 12px 32px -4px rgba(25, 28, 29, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-blue-900">Curator</div>
+<div class="hidden md:flex items-center space-gap-8 gap-x-8 font-manrope font-medium text-sm tracking-tight text-slate-600">
+<a class="hover:text-blue-700 transition-colors" href="#">Product</a>
+<a class="hover:text-blue-700 transition-colors" href="#">Pricing</a>
+<a class="hover:text-blue-700 transition-colors" href="#">Login</a>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold hover:bg-primary-container transition-all hover:scale-102 active:scale-95 duration-150 shadow-sm">
+                    Shorten Now
+                </button>
+</div>
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-6 overflow-hidden">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto relative">
+<!-- Background Decoration -->
+<div class="absolute -top-40 -right-20 w-96 h-96 bg-secondary-container/20 rounded-full blur-[100px] -z-10"></div>
+<div class="absolute top-20 -left-20 w-72 h-72 bg-primary-container/10 rounded-full blur-[80px] -z-10"></div>
+<div class="text-center mb-16">
+<h1 class="font-headline font-extrabold text-5xl md:text-7xl text-primary tracking-tighter leading-tight mb-6">
+                    Links with <span class="text-secondary italic">Editorial</span> Intent.
+                </h1>
+<p class="max-w-2xl mx-auto text-on-surface-variant text-lg leading-relaxed">
+                    Transform cluttered URLs into high-authority assets. Managed, measured, and curated for the modern digital landscape.
+                </p>
+</div>
+<!-- Main Link Input Interface -->
+<div class="max-w-4xl mx-auto">
+<div class="surface-container-low p-2 rounded-xl border border-outline-variant/15 shadow-sm">
+<div class="bg-surface-container-lowest rounded-lg p-6 md:p-8 space-y-6">
+<!-- URL Input Group -->
+<div class="space-y-4">
+<label class="block font-headline font-bold text-primary tracking-tight">Paste your long destination URL</label>
+<div class="flex flex-col md:flex-row gap-3">
+<div class="relative flex-grow">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined">link</span>
+</div>
+<input class="w-full pl-12 pr-4 py-4 rounded-lg bg-surface-container-low border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary-container text-lg font-medium placeholder:text-outline/50 transition-all" placeholder="https://your-extremely-long-url-destination.com/path..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-95 shadow-md flex items-center justify-center gap-2">
+<span>Shorten URL</span>
+<span class="material-symbols-outlined">bolt</span>
+</button>
+</div>
+</div>
+<!-- Alias and Options Grid -->
+<div class="grid md:grid-cols-2 gap-6 pt-4">
+<div class="space-y-2">
+<label class="block text-sm font-headline font-bold text-on-surface-variant">Custom Alias (Optional)</label>
+<div class="flex items-center bg-surface-container-low rounded-lg px-4 py-3 ring-1 ring-outline-variant/20">
+<span class="text-outline text-sm font-medium mr-1">curator.link/</span>
+<input class="bg-transparent border-0 p-0 focus:ring-0 text-sm font-bold text-primary w-full" placeholder="custom-alias" type="text"/>
+</div>
+</div>
+<div class="flex items-end">
+<button class="flex items-center gap-2 text-secondary font-bold text-sm hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span>Advanced Redirect Logic</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Result Preview Card (Bento Style Layout) -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Link Result -->
+<div class="md:col-span-2 glass-card rounded-xl p-8 editorial-shadow border border-white/40 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-8">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-full">Your Curated Link is Ready</span>
+<span class="material-symbols-outlined text-secondary">verified</span>
+</div>
+<div class="text-3xl font-headline font-black text-primary break-all leading-tight mb-2">
+                                curator.link/design-system-2024
+                            </div>
+<p class="text-on-surface-variant text-sm truncate">Redirects to: https://brand-portal.company.com/assets/v2/design-spec-final</p>
+</div>
+<div class="flex gap-3 mt-8">
+<button class="flex-grow flex items-center justify-center gap-2 bg-white text-primary border border-primary/10 py-3 rounded-lg font-bold hover:bg-slate-50 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+<span>Copy Link</span>
+</button>
+<button class="px-4 py-3 bg-slate-100 text-on-surface-variant rounded-lg hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+<!-- QR Code Widget -->
+<div class="glass-card rounded-xl p-8 editorial-shadow border border-white/40 flex flex-col items-center justify-center text-center">
+<div class="w-32 h-32 bg-white p-2 rounded-lg mb-6 shadow-inner ring-1 ring-outline-variant/10">
+<img alt="Short link QR Code" class="w-full h-full" data-alt="a minimalist monochrome QR code on a clean white square background with subtle soft edges" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW-wizNkk5woRWQ0EOPrEF_tG6naUlQYgIZOP1PZdDpAmPJDeVMc7SmaQYo_e3FNCIIgQ-vNVuy8WVQNxqCVn2IKoEXxIycRrZdKb0BSg4rpyUaCdXgvgVOv61RV1WVSBilQp1ZtZlx8umF0dOlQlfCsX6j8Yll4R45lR_cdVsQHcLrzVGc5qLvZrXJeNZM8AoAmgrdkECK1F91nfDkiYp1GB5iVn0TpEWfcXglNkvXFpK38PYKb20ApjVYPdPKdKrHgpPmHUKH_Yo"/>
+</div>
+<h4 class="font-headline font-bold text-primary mb-1">Visual Bridge</h4>
+<p class="text-xs text-on-surface-variant mb-4">Instant physical-to-digital redirection.</p>
+<button class="text-xs font-bold text-secondary flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-xs">download</span>
+                            Download SVG
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Bento Grid -->
+<section class="max-w-7xl mx-auto mt-32">
+<div class="mb-12">
+<h2 class="font-headline font-extrabold text-3xl text-primary tracking-tight">Powerful Precision</h2>
+<div class="h-1 w-12 bg-secondary mt-2"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+<!-- Large Feature Card -->
+<div class="md:col-span-3 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 editorial-shadow group overflow-hidden relative">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4">monitoring</span>
+<h3 class="text-2xl font-headline font-bold text-primary mb-3">Live Editorial Analytics</h3>
+<p class="text-on-surface-variant leading-relaxed">Go beyond simple click counts. Understand the context of your traffic with depth, geographic precision, and device intent.</p>
+</div>
+<div class="absolute -bottom-10 -right-10 w-48 h-48 bg-secondary-container/10 rounded-full group-hover:scale-125 transition-transform duration-500"></div>
+</div>
+<!-- Small Feature Card -->
+<div class="md:col-span-3 bg-primary text-on-primary rounded-xl p-8 editorial-shadow flex flex-col justify-between">
+<div>
+<h3 class="text-2xl font-headline font-bold mb-3">API Built for Scale</h3>
+<p class="text-on-primary-container text-sm leading-relaxed">Programmatic link creation at the speed of light. Perfect for marketing automation and enterprise workflows.</p>
+</div>
+<div class="flex items-center gap-4 mt-8">
+<div class="px-3 py-1 bg-white/10 rounded border border-white/20 font-mono text-xs">GET /v1/shorten</div>
+<span class="material-symbols-outlined">code</span>
+</div>
+</div>
+<!-- Icon Rows -->
+<div class="md:col-span-2 surface-container-low rounded-xl p-8 flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center mb-4 text-on-secondary-container">
+<span class="material-symbols-outlined" data-weight="fill">security</span>
+</div>
+<h4 class="font-headline font-bold text-primary mb-2">Secure Core</h4>
+<p class="text-xs text-on-surface-variant">SSO, 2FA, and granular permissions for every single link.</p>
+</div>
+<div class="md:col-span-2 surface-container-low rounded-xl p-8 flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center mb-4 text-primary">
+<span class="material-symbols-outlined" data-weight="fill">ads_click</span>
+</div>
+<h4 class="font-headline font-bold text-primary mb-2">Smart Redirects</h4>
+<p class="text-xs text-on-surface-variant">Target by OS, location, or time with conditional logic.</p>
+</div>
+<div class="md:col-span-2 surface-container-low rounded-xl p-8 flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-tertiary-fixed rounded-full flex items-center justify-center mb-4 text-tertiary">
+<span class="material-symbols-outlined" data-weight="fill">domain</span>
+</div>
+<h4 class="font-headline font-bold text-primary mb-2">Custom Domains</h4>
+<p class="text-xs text-on-surface-variant">Your brand, your domain. Fully managed SSL certificates.</p>
+</div>
+</div>
+</section>
+<!-- Dynamic Visual Section -->
+<section class="max-w-7xl mx-auto mt-32 rounded-3xl overflow-hidden relative min-h-[400px] flex items-center">
+<div class="absolute inset-0 bg-primary-container">
+<img alt="Analytics Dashboard" class="w-full h-full object-cover opacity-30 mix-blend-overlay" data-alt="ultra-modern clean analytics dashboard interface on a laptop screen with blue and cyan data charts in a bright airy studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk8fOOXg-q12s0QOFUvdSp4yPdY3O1RtKlV7XopxJQg7jPawIWPmi0VCFUBtmyJHeImEP4FDhv605SRujJnpVLIACWzHzZcwzOqF1ep_EzckSp3wkZWqoaEwcT_pQ3WIEe_WMNzKsHyD8llP2nAw5lP8zdFMirULlP07ULfjsg8flwzNasVR-pyExfwUh6lDr7u-Ztnv_dZfV_nTUUEqpjyB8kqeQSA4JbpMqSW2Obdx9h9uEXrgFoXq6rpIcZJ3SrQT2ZavapRL-X"/>
+</div>
+<div class="relative z-10 px-12 py-20 text-white max-w-2xl">
+<h2 class="font-headline font-black text-4xl md:text-5xl mb-6">Master your digital footprint.</h2>
+<p class="text-on-primary-container text-lg mb-10">Join 10,000+ teams using Curator to manage their link ecosystem with editorial precision.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-secondary text-white px-8 py-4 rounded-lg font-bold hover:scale-105 transition-transform shadow-lg">Get Started Free</button>
+<button class="bg-white/10 backdrop-blur-md border border-white/20 px-8 py-4 rounded-lg font-bold hover:bg-white/20 transition-all">Schedule Demo</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t border-slate-200 bg-slate-50">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start">
+<div class="font-bold text-blue-900 text-xl mb-2">Curator</div>
+<div class="font-manrope text-xs text-slate-500">© 2024 Curator Link Management</div>
+</div>
+<div class="flex gap-x-8 font-manrope text-xs text-slate-500">
+<a class="hover:underline hover:text-blue-600 transition-colors" href="#">Privacy</a>
+<a class="hover:underline hover:text-blue-600 transition-colors" href="#">Terms</a>
+<a class="hover:underline hover:text-blue-600 transition-colors" href="#">API Documentation</a>
+<a class="hover:underline hover:text-blue-600 transition-colors" href="#">Contact</a>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">language</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">monitoring</span>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curator | Link Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#acedff",
+              "on-secondary-container": "#006172",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#380d00",
+              "secondary": "#00687a",
+              "on-tertiary-container": "#ffa583",
+              "inverse-primary": "#b8c4ff",
+              "primary-fixed": "#dde1ff",
+              "on-primary-container": "#a8b8ff",
+              "secondary-fixed-dim": "#4cd7f6",
+              "tertiary-fixed-dim": "#ffb59a",
+              "surface-container-low": "#f3f4f5",
+              "on-primary-fixed-variant": "#173bab",
+              "outline": "#757684",
+              "outline-variant": "#c4c5d5",
+              "on-background": "#191c1d",
+              "primary-fixed-dim": "#b8c4ff",
+              "surface-container": "#edeeef",
+              "primary-container": "#1e40af",
+              "background": "#f8f9fa",
+              "tertiary-container": "#872d00",
+              "surface-dim": "#d9dadb",
+              "on-primary-fixed": "#001453",
+              "inverse-on-surface": "#f0f1f2",
+              "on-secondary-fixed-variant": "#004e5c",
+              "surface-container-highest": "#e1e3e4",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#001f26",
+              "on-tertiary-fixed-variant": "#802a00",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#57dffe",
+              "tertiary-fixed": "#ffdbce",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "on-secondary": "#ffffff",
+              "on-surface": "#191c1d",
+              "surface-container-high": "#e7e8e9",
+              "primary": "#00288e",
+              "surface-tint": "#3755c3",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#444653",
+              "tertiary": "#611e00",
+              "error-container": "#ffdad6",
+              "surface-bright": "#f8f9fa"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface flex min-h-screen">
+<!-- SideNavBar Implementation -->
+<aside class="hidden md:flex flex-col p-6 space-y-4 h-screen w-64 border-r border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 sticky top-0">
+<div class="mb-8">
+<h1 class="text-xl font-black text-blue-900 dark:text-blue-50 font-headline">Digital Curator</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-widest mt-1">Premium Plan</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900/50 hover:translate-x-1 transition-all duration-200 ease-in-out font-manrope text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900/50 hover:translate-x-1 transition-all duration-200 ease-in-out font-manrope text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="link">link</span>
+<span>Links</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-700 dark:text-blue-400 font-bold bg-white dark:bg-slate-900 rounded-lg shadow-sm hover:translate-x-1 transition-all duration-200 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900/50 hover:translate-x-1 transition-all duration-200 ease-in-out font-manrope text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<button class="mt-auto w-full py-3 bg-primary text-on-primary rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-primary-container transition-all duration-150 active:scale-95 shadow-sm">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span>New Link</span>
+</button>
+</aside>
+<main class="flex-1 min-w-0">
+<!-- TopAppBar Implementation -->
+<header class="flex justify-between items-center px-6 w-full h-16 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky top-0 z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="flex flex-col">
+<h2 class="font-manrope font-bold text-xl text-blue-700 dark:text-blue-400 leading-tight">Summer Campaign 2024</h2>
+<span class="text-xs font-medium text-slate-400 dark:text-slate-500">curat.or/summer-24-promo</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full active:scale-95 duration-100">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full active:scale-95 duration-100">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden ml-2">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="professional portrait of a creative director in a minimalist studio setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqM_-_frSZZuFte-vay_JlSJDyzbUtuhYk8oGhMhyH_fYNiGnolU8wASkRT7oACEL3odfMRcngIgZkPQJb0STNK_2rbghb9geQxTeXh4LdvtJo13Si0YFZ3EsOEBZqL17_NKVQrTZJEHSO4UvYFd3MEf3Ovi0fCoqfLEdjgjQLa0RUvkPgJn0VvUT3ZhnZlgnJsU0TeyzwTxed3JjVhFpr8uyABYtEub0nLyxjBE2EMtNDEPLNOCsxZSNCks7dAhpa3KNWlX0oWdpM"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<div class="p-8 max-w-7xl mx-auto space-y-8">
+<!-- Hero Metrics: Bento Style -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="md:col-span-2 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500"></div>
+<p class="text-on-surface-variant font-label text-sm uppercase tracking-wider mb-2">Total Engagements</p>
+<div class="flex items-end gap-3">
+<span class="text-4xl font-headline font-extrabold text-primary">124,802</span>
+<span class="text-secondary font-bold text-sm mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+                            12.5%
+                        </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm">
+<p class="text-on-surface-variant font-label text-sm uppercase tracking-wider mb-2">Unique Visitors</p>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">89,431</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm">
+<p class="text-on-surface-variant font-label text-sm uppercase tracking-wider mb-2">Conversion Rate</p>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-headline font-bold text-on-surface">4.8%</span>
+</div>
+</div>
+</section>
+<!-- Traffic Trends Chart Area -->
+<section class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-center mb-10">
+<div>
+<h3 class="font-headline font-bold text-xl text-on-surface">Traffic Trends</h3>
+<p class="text-on-surface-variant text-sm">Engagement volume over the last 30 days</p>
+</div>
+<div class="flex bg-surface-container-low p-1 rounded-lg">
+<button class="px-4 py-1.5 text-xs font-bold bg-white rounded-md shadow-sm text-primary">30D</button>
+<button class="px-4 py-1.5 text-xs font-medium text-on-surface-variant">7D</button>
+<button class="px-4 py-1.5 text-xs font-medium text-on-surface-variant">24H</button>
+</div>
+</div>
+<!-- Simulated Chart Container -->
+<div class="h-80 w-full relative">
+<div class="absolute inset-0 flex items-end justify-between gap-2 px-2">
+<!-- Simulated Bars/Points for Visual Interest -->
+<div class="w-full bg-primary/5 h-1/4 rounded-t-sm"></div>
+<div class="w-full bg-primary/10 h-1/3 rounded-t-sm"></div>
+<div class="w-full bg-primary/5 h-1/5 rounded-t-sm"></div>
+<div class="w-full bg-primary/20 h-1/2 rounded-t-sm"></div>
+<div class="w-full bg-primary/40 h-3/4 rounded-t-sm"></div>
+<div class="w-full bg-primary/30 h-2/3 rounded-t-sm"></div>
+<div class="w-full bg-primary/60 h-full rounded-t-sm relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 glass-card border border-white px-3 py-1 rounded shadow-xl text-[10px] font-bold whitespace-nowrap">
+                                Peak: 8.2k clicks
+                            </div>
+</div>
+<div class="w-full bg-primary/40 h-3/4 rounded-t-sm"></div>
+<div class="w-full bg-primary/20 h-1/2 rounded-t-sm"></div>
+<div class="w-full bg-primary/10 h-1/3 rounded-t-sm"></div>
+<div class="w-full bg-primary/5 h-1/4 rounded-t-sm"></div>
+<div class="w-full bg-primary/10 h-1/2 rounded-t-sm"></div>
+<div class="w-full bg-primary/30 h-2/3 rounded-t-sm"></div>
+<div class="w-full bg-primary/10 h-1/4 rounded-t-sm"></div>
+</div>
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+</div>
+</div>
+</section>
+<!-- Two-Column Asymmetric Content -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Map View -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10 shadow-sm flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-headline font-bold text-xl text-on-surface">Visitor Geography</h3>
+<p class="text-on-surface-variant text-sm">Top performing regions by volume</p>
+</div>
+<button class="text-primary font-bold text-xs uppercase tracking-widest hover:underline">Export Map</button>
+</div>
+<div class="flex-1 rounded-lg overflow-hidden relative bg-slate-100 min-h-[300px]">
+<img alt="Topographic Map" class="w-full h-full object-cover grayscale opacity-50" data-alt="minimalist aesthetic world map with soft blue highlights on high-traffic metropolitan areas in a modern clean UI style" data-location="San Francisco" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSqQ3nclJ4QMYc_h0W-ufYAGSfMXpIMmvlIl7v1TjrAsIwH2c2s0dwFbBKvI-o1c4zj-ybUmMDys6ycM8w3aCoNY7rOGW0JpK1qpGFqZdmsbZg4M0o9hdAwVK0LsZXiGgBW_kzAwDULwzy2bNHzTPyz3nL4U4aJHsTmbadeDJFXQTVpaz3sg_Tp1HUZWoKaoGQLkfLMGLvwsWFSUaeGdATmf2qtPCv6wH25T-XNxFqFZSuKOmdvm1xdq9swo29Ua_0Ur1_j4QTM3L0"/>
+<!-- Simulated Hotspots -->
+<div class="absolute top-1/4 left-1/4 w-4 h-4 bg-secondary/40 rounded-full animate-pulse"></div>
+<div class="absolute top-1/3 left-1/3 w-8 h-8 bg-primary/30 rounded-full"></div>
+<div class="absolute top-1/2 right-1/4 w-6 h-6 bg-secondary/30 rounded-full"></div>
+</div>
+<div class="grid grid-cols-3 mt-6 gap-4">
+<div class="p-3 bg-surface-container-low rounded-lg">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">United States</p>
+<p class="text-lg font-headline font-bold">42.4%</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">United Kingdom</p>
+<p class="text-lg font-headline font-bold">18.1%</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase mb-1">Germany</p>
+<p class="text-lg font-headline font-bold">12.5%</p>
+</div>
+</div>
+</div>
+<!-- Device Breakdown -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10 shadow-sm">
+<h3 class="font-headline font-bold text-xl text-on-surface mb-6">Device &amp; Browser</h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="flex items-center gap-2 text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="smartphone">smartphone</span>
+                                    Mobile
+                                </span>
+<span class="text-sm font-bold">64%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 64%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="flex items-center gap-2 text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="desktop_windows">desktop_windows</span>
+                                    Desktop
+                                </span>
+<span class="text-sm font-bold">31%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 31%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="flex items-center gap-2 text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="tablet_mac">tablet_mac</span>
+                                    Tablet
+                                </span>
+<span class="text-sm font-bold">5%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full" style="width: 5%"></div>
+</div>
+</div>
+</div>
+<div class="mt-10 pt-8 border-t border-outline-variant/10">
+<h4 class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-4">Top Browsers</h4>
+<div class="space-y-4">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Chrome</span>
+<span class="font-medium">52%</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Safari</span>
+<span class="font-medium">38%</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Firefox</span>
+<span class="font-medium">6%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Table -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden">
+<div class="p-8 pb-4">
+<h3 class="font-headline font-bold text-xl text-on-surface">Recent Activity</h3>
+<p class="text-on-surface-variant text-sm">Real-time engagement log</p>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Timestamp</th>
+<th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">IP Address</th>
+<th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Location</th>
+<th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Referrer</th>
+<th class="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-8 py-5 text-sm font-medium">Just now</td>
+<td class="px-8 py-5 text-sm font-mono text-slate-500">192.168.1.42</td>
+<td class="px-8 py-5 text-sm flex items-center gap-2">
+<span class="w-4 h-3 bg-slate-200 rounded-sm"></span>
+                                    San Francisco, CA
+                                </td>
+<td class="px-8 py-5 text-sm text-primary underline underline-offset-4 decoration-primary/20">twitter.com</td>
+<td class="px-8 py-5 text-sm text-secondary font-bold">Clicked</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-8 py-5 text-sm font-medium">2 mins ago</td>
+<td class="px-8 py-5 text-sm font-mono text-slate-500">104.28.44.11</td>
+<td class="px-8 py-5 text-sm flex items-center gap-2">
+<span class="w-4 h-3 bg-slate-200 rounded-sm"></span>
+                                    London, UK
+                                </td>
+<td class="px-8 py-5 text-sm text-primary underline underline-offset-4 decoration-primary/20">Direct</td>
+<td class="px-8 py-5 text-sm text-secondary font-bold">Clicked</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-8 py-5 text-sm font-medium">12 mins ago</td>
+<td class="px-8 py-5 text-sm font-mono text-slate-500">72.14.192.1</td>
+<td class="px-8 py-5 text-sm flex items-center gap-2">
+<span class="w-4 h-3 bg-slate-200 rounded-sm"></span>
+                                    Berlin, DE
+                                </td>
+<td class="px-8 py-5 text-sm text-primary underline underline-offset-4 decoration-primary/20">linkedin.com</td>
+<td class="px-8 py-5 text-sm text-secondary font-bold">Clicked</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors duration-150">
+<td class="px-8 py-5 text-sm font-medium">45 mins ago</td>
+<td class="px-8 py-5 text-sm font-mono text-slate-500">185.34.112.5</td>
+<td class="px-8 py-5 text-sm flex items-center gap-2">
+<span class="w-4 h-3 bg-slate-200 rounded-sm"></span>
+                                    Austin, TX
+                                </td>
+<td class="px-8 py-5 text-sm text-primary underline underline-offset-4 decoration-primary/20">google.com</td>
+<td class="px-8 py-5 text-sm text-secondary font-bold">Clicked</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container-low/30 border-t border-outline-variant/10 text-center">
+<button class="text-xs font-bold text-primary hover:text-primary-container transition-colors uppercase tracking-widest">View Full Log</button>
+</div>
+</section>
+</div>
+<!-- Footer Implementation -->
+<footer class="w-full py-12 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 mt-12">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-bold text-blue-900 font-headline">Curator</span>
+<p class="font-manrope text-xs text-slate-500 mt-2">© 2024 Curator Link Management</p>
+</div>
+<div class="flex gap-8">
+<a class="font-manrope text-xs text-slate-500 hover:underline" href="#">Privacy</a>
+<a class="font-manrope text-xs text-slate-500 hover:underline" href="#">Terms</a>
+<a class="font-manrope text-xs text-slate-500 hover:underline" href="#">API Documentation</a>
+<a class="font-manrope text-xs text-slate-500 hover:underline" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</main>
+<!-- Mobile Navigation (Suppressed per task guidelines for "Specific Link" detail views that usually imply focus, but including BottomNavBar if interpreted as top-level Analytics) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/70 backdrop-blur-md border-t border-slate-100 flex justify-around items-center py-3 z-50">
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px]">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="text-[10px] font-bold">Analytics</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px]">Settings</span>
+</button>
+</nav>
+</body></html>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const Sidebar = () => {
@@ -19,102 +19,99 @@ const Sidebar = () => {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+    `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
       isActive
-        ? 'text-white bg-primary-container/20 border-l-2 border-primary-container'
-        : 'text-slate-400 hover:text-white hover:bg-white/5'
+        ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm border border-zinc-200 dark:border-zinc-700'
+        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 border border-transparent'
     }`;
 
   return (
-    <aside className="hidden md:flex flex-col p-6 space-y-2 h-screen w-64 fixed left-0 top-0 z-50 bg-primary border-r border-slate-700/30">
-      <div className="flex items-center gap-3 mb-8 px-2">
-        <span className="material-symbols-outlined text-white text-2xl">link</span>
-        <h1 className="text-xl font-bold text-white tracking-tight">Curator</h1>
+    <aside className="hidden md:flex flex-col p-4 space-y-4 h-screen w-64 fixed left-0 top-0 z-50 bg-zinc-50 dark:bg-zinc-900/50 border-r border-zinc-200 dark:border-zinc-800 transition-colors">
+      <div className="flex items-center gap-2 mb-4 px-2">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
+          <span className="material-symbols-outlined text-[18px] font-bold">link</span>
+        </div>
+        <Link to="/" className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">Curator</Link>
       </div>
 
       <nav className="flex-1 space-y-1">
         <NavLink to="/dashboard" className={navLinkClass}>
-          {({ isActive }) => (
+          {() => (
             <>
-              <span className="material-symbols-outlined text-lg">dashboard</span>
+              <span className="material-symbols-outlined text-[20px]">grid_view</span>
               <span>Dashboard</span>
             </>
           )}
         </NavLink>
         <NavLink to="/links" className={navLinkClass}>
-          {({ isActive }) => (
+          {() => (
             <>
-              <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>link</span>
+              <span className="material-symbols-outlined text-[20px]">link</span>
               <span>Links</span>
             </>
           )}
         </NavLink>
         <NavLink to="/analytics" className={navLinkClass}>
-          {({ isActive }) => (
+          {() => (
             <>
-              <span className="material-symbols-outlined text-lg">leaderboard</span>
+              <span className="material-symbols-outlined text-[20px]">bar_chart</span>
               <span>Analytics</span>
             </>
           )}
         </NavLink>
         <NavLink to="/settings" className={navLinkClass}>
-          {({ isActive }) => (
+          {() => (
             <>
-              <span className="material-symbols-outlined text-lg">settings</span>
+              <span className="material-symbols-outlined text-[20px]">settings</span>
               <span>Settings</span>
             </>
           )}
         </NavLink>
         <NavLink to="/profile" className={navLinkClass}>
-          {({ isActive }) => (
+          {() => (
             <>
-              <span className="material-symbols-outlined text-lg">person</span>
+              <span className="material-symbols-outlined text-[20px]">person</span>
               <span>Profile</span>
             </>
           )}
         </NavLink>
       </nav>
 
-      <div className="p-3 bg-primary-container/10 rounded-md relative">
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setDropdownOpen(!dropdownOpen)}>
-          <img
-            alt="User Avatar"
-            className="w-9 h-9 rounded-full object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMG5XvB0RtJ8bB2K3p-8hQBM5W8pK8S1dZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1rZ1"
-          />
-          <div className="overflow-hidden flex-1">
-            <p className="text-xs font-bold text-white truncate">{userEmail || 'User'}</p>
-            <p className="text-[10px] text-slate-300 truncate">Premium Plan</p>
+      <div className="relative">
+        <div 
+          className="flex items-center gap-3 p-2 rounded-xl cursor-pointer hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-colors border border-transparent"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+        >
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
           </div>
-          <span className="material-symbols-outlined text-white text-sm">{dropdownOpen ? 'expand_less' : 'expand_more'}</span>
+          <div className="overflow-hidden flex-1">
+            <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">{userEmail || 'User'}</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">Free Plan</p>
+          </div>
+          <span className="material-symbols-outlined text-zinc-400 text-sm">unfold_more</span>
         </div>
 
         {dropdownOpen && (
-          <div className="absolute bottom-full left-0 mb-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
+          <div className="absolute bottom-full left-0 mb-2 w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-soft dark:shadow-soft-dark z-50 overflow-hidden">
             <button
               onClick={() => { navigate('/settings'); setDropdownOpen(false); }}
-              className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-t-lg"
+              className="w-full text-left px-4 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
             >
               Settings
             </button>
             <button
               onClick={() => { navigate('/profile'); setDropdownOpen(false); }}
-              className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              className="w-full text-left px-4 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
             >
               Profile
             </button>
-            <button
-              onClick={() => alert('Account deletion is not yet wired up for Supabase.')}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-            >
-              Delete Account
-            </button>
-            <div className="border-t border-slate-100"></div>
+            <div className="border-t border-zinc-100 dark:border-zinc-700"></div>
             <button
               onClick={handleLogout}
-              className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-b-lg"
+              className="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
-              Logout
+              Log out
             </button>
           </div>
         )}

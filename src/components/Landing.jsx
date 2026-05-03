@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 import { supabase } from '../utils/supabaseClient';
 import { buildShortUrl, createLink } from '../utils/linksService';
 
@@ -10,10 +11,9 @@ const Landing = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, user } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,222 +57,175 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-950 transition-colors duration-200">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="text-2xl font-outfit font-bold text-white">Curator</Link>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              {/* Product Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setProductDropdownOpen(true)}
-                onMouseLeave={() => setProductDropdownOpen(false)}
+      <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
+                <span className="material-symbols-outlined text-lg font-bold">link</span>
+              </div>
+              <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">Curator</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={toggleTheme} 
+                className="rounded-full p-2 text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors"
+                aria-label="Toggle dark mode"
               >
-                  <button className="text-slate-300 hover:text-white transition-colors flex items-center gap-1">
-                    Product
-                    <span className="material-symbols-outlined text-sm">expand_more</span>
-                  </button>
-                  {productDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50">
-                      <div className="py-2">
-                        <Link to="/analytics" className="block px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white">URL Shortener</Link>
-                        <Link to="/links" className="block px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white">Analytics</Link>
-                        <button onClick={() => { alert('QR Generator coming soon'); setProductDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white">QR Code Generator</button>
-                        {/* New product actions – for demo we just alert */}
-                        <button onClick={() => { alert('Product A selected – navigate or show details here'); setProductDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white">Product A</button>
-                        <button onClick={() => { alert('Product B selected – navigate or show details here'); setProductDropdownOpen(false); }} className="block w-full text-left px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white">Product B</button>
+                <span className="material-symbols-outlined text-xl">
+                  {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+                </span>
+              </button>
+              {isAuthenticated ? (
+                <Link to="/dashboard" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white transition-colors">Dashboard</Link>
+              ) : (
+                <>
+                  <Link to="/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white transition-colors hidden sm:block">Log in</Link>
+                  <Link to="/signup" className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 transition-all">Sign up</Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1">
+        <div className="relative overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pb-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="mx-auto max-w-4xl font-display text-5xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-7xl">
+              Short links with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">superpowers</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-zinc-600 dark:text-zinc-400">
+              Curator is an open-source link management tool for modern marketing teams to create, share, and track short links.
+            </p>
+
+            {/* URL Input Area */}
+            <div className="mt-10 mx-auto max-w-2xl">
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1 group">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                    <span className="material-symbols-outlined text-zinc-400 group-focus-within:text-blue-500">link</span>
+                  </div>
+                  <input
+                    type="url"
+                    required
+                    placeholder="https://your-long-url.com/very/long/path"
+                    className="block w-full rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-4 pl-12 pr-4 text-base text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all shadow-soft dark:shadow-soft-dark"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center rounded-2xl bg-zinc-900 dark:bg-white px-8 py-4 text-base font-semibold text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:focus:ring-white dark:focus:ring-offset-zinc-950 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-soft"
+                >
+                  {loading ? (
+                    <span className="material-symbols-outlined animate-spin">refresh</span>
+                  ) : (
+                    'Shorten'
+                  )}
+                </button>
+              </form>
+              
+              {/* Optional Alias */}
+              <div className="mt-4 flex items-center justify-center sm:justify-start text-sm text-zinc-500 dark:text-zinc-400">
+                <span>curator.link/</span>
+                <input
+                  type="text"
+                  placeholder="custom-alias (optional)"
+                  className="ml-1 bg-transparent border-b border-zinc-300 dark:border-zinc-700 focus:border-blue-500 focus:outline-none py-1 px-1 text-zinc-900 dark:text-white placeholder-zinc-400 w-40 transition-colors"
+                  value={alias}
+                  onChange={(e) => setAlias(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="mt-4 text-left rounded-xl bg-red-50 dark:bg-red-950/30 p-4 border border-red-200 dark:border-red-900">
+                  <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                </div>
+              )}
+
+              {/* Success Result */}
+              {result && (
+                <div className="mt-8 animate-slide-down">
+                  <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-soft dark:shadow-soft-dark flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+                        <span className="material-symbols-outlined text-xl">check</span>
+                      </div>
+                      <div className="truncate text-left w-full">
+                        <a href={result} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-zinc-900 dark:text-white hover:underline truncate block">
+                          {result}
+                        </a>
                       </div>
                     </div>
-                  )}
-              </div>
-              <Link to="/login" className="text-slate-300 hover:text-white transition-colors">Login</Link>
-              <Link to="/signup" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-500 transition-colors">Sign Up</Link>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <button
+                        onClick={copyToClipboard}
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[18px] mr-1.5">content_copy</span>
+                        Copy
+                      </button>
+                      <button
+                        onClick={downloadQR}
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 px-4 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[18px] mr-1.5">qr_code</span>
+                        QR
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-
-            {/* Mobile Menu Button */}
-            <button className="md:hidden text-slate-300" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              <span className="material-symbols-outlined text-2xl">{mobileMenuOpen ? 'close' : 'menu'}</span>
-            </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-slate-900 border-t border-slate-800">
-            <div className="px-6 py-4 space-y-4">
-              {/* Mobile Product Dropdown */}
-              <div>
-                <button 
-                  onClick={() => setProductDropdownOpen(!productDropdownOpen)}
-                  className="flex items-center justify-between w-full text-slate-300 hover:text-white"
-                >
-                  Product
-                  <span className="material-symbols-outlined text-sm">{productDropdownOpen ? 'expand_less' : 'expand_more'}</span>
-                </button>
-                {productDropdownOpen && (
-                  <div className="mt-2 ml-4 space-y-2">
-                    <Link to="/analytics" className="block text-slate-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>URL Shortener</Link>
-                    <Link to="/links" className="block text-slate-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>Analytics</Link>
-                    <button onClick={() => { alert('QR Generator coming soon'); setProductDropdownOpen(false); setMobileMenuOpen(false); }} className="block text-left text-slate-300 hover:text-white">QR Code Generator</button>
+        {/* Features Section */}
+        <div className="py-16 sm:py-24 border-t border-zinc-100 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-900/20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { title: 'Advanced Analytics', desc: 'Track clicks, geographic data, and referrers to understand your audience.', icon: 'monitoring' },
+                { title: 'Custom Domains', desc: 'Connect your own domain to create branded, recognizable short links.', icon: 'language' },
+                { title: 'API Access', desc: 'Integrate Curator directly into your application using our powerful API.', icon: 'api' }
+              ].map((feature, idx) => (
+                <div key={idx} className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm transition-all hover:shadow-md dark:hover:shadow-soft-dark">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white">
+                    <span className="material-symbols-outlined">{feature.icon}</span>
                   </div>
-                )}
-              </div>
-              <Link to="/login" className="block text-slate-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-              <Link to="/signup" className="block bg-blue-600 text-white px-6 py-3 rounded-lg text-center" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                  <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-white">{feature.title}</h3>
+                  <p className="text-zinc-600 dark:text-zinc-400">{feature.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
-        )}
-      </nav>
-
-      {/* Main Content */}
-      <main className="flex-1 pt-32 pb-24 px-6">
-        {/* Hero */}
-        <section className="max-w-5xl mx-auto text-center mb-24">
-          <h1 className="text-5xl md:text-7xl font-outfit font-bold text-white mb-8 leading-tight">Elevate your links.</h1>
-          <p className="text-xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">Create short, memorable URLs with powerful analytics. Professional, minimal, and fast.</p>
-
-          <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-5">
-            {error && <div className="p-4 bg-red-900/30 border border-red-700 text-red-200 rounded-lg">{error}</div>}
-            <div className="flex flex-col sm:flex-row gap-5">
-              <input
-                type="url"
-                required
-                className="flex-1 bg-slate-800 border border-slate-700 rounded-xl py-5 px-5 text-lg text-white placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                placeholder="Paste your long URL here"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                disabled={loading}
-              />
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-12 py-5 rounded-xl font-bold text-lg hover:bg-blue-500 disabled:opacity-60"
-                disabled={loading}
-              >
-                {loading ? 'Shortening...' : 'Shorten URL'}
-              </button>
-            </div>
-            <div className="text-base text-slate-400 pt-2">
-              Optional custom alias: <span className="font-mono bg-slate-800 px-2 py-1 rounded border border-slate-700 text-slate-200">curator.link/</span>
-              <input
-                type="text"
-                className="bg-slate-800 border border-slate-700 rounded-xl py-3 px-4 ml-3 focus:ring-2 focus:ring-blue-500 outline-none text-white"
-                placeholder="my-link"
-                value={alias}
-                onChange={(e) => setAlias(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-          </form>
-
-          {result && (
-            <div className="mt-12 max-w-3xl mx-auto">
-              <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-lg mb-6">
-                <p className="text-lg font-bold text-white mb-4">Your short link is ready:</p>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                  <span className="text-3xl font-mono text-blue-400 break-all">{result}</span>
-                  <button onClick={copyToClipboard} className="bg-slate-700 hover:bg-slate-600 text-white px-10 py-4 rounded-xl font-medium whitespace-nowrap">
-                    Copy Link
-                  </button>
-                </div>
-              </div>
-
-              {/* QR Code Section */}
-              <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-lg">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="flex flex-col items-center md:items-start">
-                    <h3 className="text-xl font-bold text-white mb-4">QR Code</h3>
-                    <p className="text-slate-400 mb-6 text-center md:text-left">Download and share your QR code. Scans lead directly to your short link.</p>
-                    <button
-                      onClick={downloadQR}
-                      className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium flex items-center gap-2"
-                    >
-                      <span className="material-symbols-outlined">download</span>
-                      Download QR
-                    </button>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg shadow-md">
-                    <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(result)}`}
-                      alt="QR Code"
-                      className="w-48 h-48"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
-
-        {/* Features */}
-        <section className="max-w-7xl mx-auto mt-32">
-          <div className="mb-20 text-center">
-            <h2 className="text-4xl font-outfit font-bold text-white mb-4">Everything you need.</h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">A complete platform for link management, analytics, and brand consistency.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Feature 1 */}
-            <div className="bg-slate-800 border-l-4 border-blue-500 rounded-xl p-10">
-              <div className="flex items-center gap-5 mb-6">
-                <div className="w-14 h-14 bg-blue-500/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-blue-400 text-3xl">monitoring</span>
-                </div>
-                <h3 className="text-xl font-outfit font-bold text-white">Real-time Analytics</h3>
-              </div>
-              <p className="text-base text-slate-300 leading-relaxed">Track clicks, geographic distribution, device types, and referral sources with precision. Export data anytime.</p>
-            </div>
-            {/* Feature 2 */}
-            <div className="bg-slate-800 border-l-4 border-emerald-500 rounded-xl p-10">
-              <div className="flex items-center gap-5 mb-6">
-                <div className="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-emerald-400 text-3xl">security</span>
-                </div>
-                <h3 className="text-xl font-outfit font-bold text-white">Enterprise Security</h3>
-              </div>
-              <p className="text-base text-slate-300 leading-relaxed">SSO integration, two-factor authentication, and fine-grained access controls keep your data safe.</p>
-            </div>
-            {/* Feature 3 */}
-            <div className="bg-slate-800 border-l-4 border-amber-500 rounded-xl p-10">
-              <div className="flex items-center gap-5 mb-6">
-                <div className="w-14 h-14 bg-amber-500/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-amber-400 text-3xl">api</span>
-                </div>
-                <h3 className="text-xl font-outfit font-bold text-white">Developer API</h3>
-              </div>
-              <p className="text-base text-slate-300 leading-relaxed">RESTful endpoints with comprehensive documentation. Build custom integrations and automate workflows.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="max-w-7xl mx-auto mt-32">
-          <div className="bg-blue-600 rounded-2xl overflow-hidden shadow-xl">
-            <div className="px-16 py-24 text-center text-white">
-              <h2 className="text-4xl font-outfit font-bold mb-6">Ready to get started?</h2>
-              <p className="text-white/90 text-xl mb-12 max-w-2xl mx-auto">Join thousands of teams using Curator to manage their links with precision.</p>
-              <div className="flex flex-wrap justify-center gap-6">
-                <Link to="/signup" className="bg-white text-blue-600 px-12 py-5 rounded-xl font-bold text-lg hover:bg-slate-100 inline-block text-center">Get Started Free</Link>
-                <button className="bg-blue-700 border-2 border-blue-400 px-12 py-5 rounded-xl font-bold text-lg hover:bg-blue-800">Schedule Demo</button>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-14 border-t border-slate-800 bg-slate-900">
-        <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col items-center md:items-start">
-            <div className="font-outfit font-bold text-white text-2xl mb-3">Curator</div>
-            <div className="text-base text-slate-400">© 2024 Curator Link Management</div>
+      <footer className="border-t border-zinc-200 dark:border-zinc-800 py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
+              <span className="material-symbols-outlined text-[14px] font-bold">link</span>
+            </div>
+            <span className="text-sm font-bold text-zinc-900 dark:text-white">Curator</span>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400 ml-2">© 2025</span>
           </div>
-          <div className="flex gap-10 text-base">
-            {['Privacy', 'Terms', 'API Documentation', 'Contact'].map((link) => (
-              <a key={link} className="text-slate-400 hover:text-white transition-colors" href="#">{link}</a>
-            ))}
+          <div className="flex gap-6 text-sm text-zinc-500 dark:text-zinc-400">
+            <a href="#" className="hover:text-zinc-900 dark:hover:text-white transition-colors">Privacy</a>
+            <a href="#" className="hover:text-zinc-900 dark:hover:text-white transition-colors">Terms</a>
+            <a href="#" className="hover:text-zinc-900 dark:hover:text-white transition-colors">Twitter</a>
+            <a href="#" className="hover:text-zinc-900 dark:hover:text-white transition-colors">GitHub</a>
           </div>
         </div>
       </footer>

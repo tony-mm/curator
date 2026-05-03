@@ -5,9 +5,11 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import isoCountries from 'i18n-iso-countries';
 import { supabase } from '../utils/supabaseClient';
 import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 const Analytics = () => {
   const { user } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [overview, setOverview] = useState({ totalClicks: 0, linkCount: 0, uniqueVisitors: 0 });
   const [links, setLinks] = useState([]);
   const [analyticsRows, setAnalyticsRows] = useState([]);
@@ -18,6 +20,7 @@ const Analytics = () => {
   const [os, setOs] = useState([]);
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const loadAnalytics = () => {
     if (!user?.id) return;
     const since = new Date();
@@ -26,7 +29,7 @@ const Analytics = () => {
     Promise.all([
       supabase
         .from('links')
-        .select('id, clicks')
+        .select('id, clicks, short_code, original_url, created_at, is_archived, expires_at')
         .eq('user_id', user.id),
       supabase
         .from('analytics')
@@ -208,7 +211,6 @@ const Analytics = () => {
     const map = new Map();
     for (const c of countries) {
       const alpha2 = typeof c?.country === 'string' ? c.country.toUpperCase() : '';
-      // Backend returns ISO alpha-2. The topojson file uses ISO numeric as geo.id (e.g. US -> 840).
       const numeric = alpha2 ? isoCountries.alpha2ToNumeric(alpha2) : undefined;
       if (numeric) map.set(String(numeric), c);
     }
@@ -276,89 +278,107 @@ const Analytics = () => {
     }
   };
 
+  const chartStrokeColor = theme === 'dark' ? '#60a5fa' : '#3b82f6';
+  const chartFillColorStart = theme === 'dark' ? 'rgba(96, 165, 250, 0.2)' : 'rgba(59, 130, 246, 0.2)';
+  const chartFillColorEnd = theme === 'dark' ? 'rgba(96, 165, 250, 0)' : 'rgba(59, 130, 246, 0)';
+  const mapFillBase = theme === 'dark' ? '#27272a' : '#f4f4f5';
+  const mapStrokeColor = theme === 'dark' ? '#3f3f46' : '#e4e4e7';
+
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-white dark:bg-zinc-950 transition-colors duration-200">
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 md:ml-64">
-        <header className="w-full h-16 flex justify-between items-center px-6 sticky top-0 bg-white border-b border-slate-200 z-40">
-          <div className="flex items-center flex-1 max-w-xl">
+        {/* Header */}
+        <header className="w-full h-16 flex justify-between items-center px-6 sticky top-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 z-40">
+          <div className="flex items-center flex-1 max-w-md">
             <div className="relative w-full">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-lg">search</span>
               <input
-                className="w-full border border-slate-300 rounded-full py-2 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg py-2 pl-10 pr-4 text-sm text-zinc-900 dark:text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all shadow-sm"
                 placeholder="Search analytics..."
                 type="text"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-4 ml-6">
-            <button className="relative p-2 text-slate-600 hover:text-primary rounded-md">
-              <span className="material-symbols-outlined">notifications</span>
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          <div className="flex items-center gap-3 ml-4">
+            <button 
+              onClick={toggleTheme} 
+              className="p-2 hidden sm:block text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            >
+              <span className="material-symbols-outlined">{theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
             </button>
-            <button className="p-2 text-slate-600 hover:text-primary rounded-md">
-              <span className="material-symbols-outlined">help</span>
+            <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-700 hidden sm:block"></div>
+            <button
+              onClick={() => exportToCSV('analytics')}
+              className="bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors shadow-sm"
+            >
+              <span className="material-symbols-outlined text-sm">download</span>
+              Export
             </button>
-            <div className="h-8 w-[1px] bg-slate-200"></div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => exportToCSV('analytics')}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-md"
-              >
-                <span className="material-symbols-outlined text-base">download</span>
-                Export CSV
-              </button>
-            </div>
           </div>
         </header>
 
-        <div className="flex-1 p-8 max-w-7xl mx-auto space-y-8 bg-slate-50">
+        <div className="flex-1 p-6 md:p-8 max-w-6xl w-full mx-auto space-y-8 pb-24">
+          <div className="mb-6 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Analytics</h1>
+          </div>
+
           {loading ? (
-            <div className="text-center py-20 text-slate-500">Loading analytics...</div>
+            <div className="flex justify-center items-center h-64">
+              <span className="material-symbols-outlined animate-spin text-4xl text-zinc-300 dark:text-zinc-700">refresh</span>
+            </div>
           ) : (
             <>
               {/* Hero Metrics */}
-              <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="md:col-span-2 bg-white border border-slate-200 rounded-lg shadow-sm p-6">
-                  <p className="text-slate-500 text-sm font-medium mb-2">Total Clicks</p>
-                  <div className="flex items-end gap-3">
-                    <span className="text-4xl font-bold text-slate-900">{overview.totalClicks.toLocaleString()}</span>
+              <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 rounded-2xl shadow-soft dark:shadow-soft-dark">
+                  <div className="flex items-center gap-2 mb-3 text-zinc-500 dark:text-zinc-400">
+                    <span className="material-symbols-outlined text-lg">mouse</span>
+                    <span className="text-sm font-medium">Total Clicks</span>
                   </div>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-white">{overview.totalClicks.toLocaleString()}</p>
+                </div>
+                
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 rounded-2xl shadow-soft dark:shadow-soft-dark">
+                  <div className="flex items-center gap-2 mb-3 text-zinc-500 dark:text-zinc-400">
+                    <span className="material-symbols-outlined text-lg">group</span>
+                    <span className="text-sm font-medium">Unique Visitors</span>
+                  </div>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-white">{overview.uniqueVisitors.toLocaleString()}</p>
+                </div>
+                
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 rounded-2xl shadow-soft dark:shadow-soft-dark">
+                  <div className="flex items-center gap-2 mb-3 text-zinc-500 dark:text-zinc-400">
+                    <span className="material-symbols-outlined text-lg">link</span>
+                    <span className="text-sm font-medium">Total Links</span>
+                  </div>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-white">{overview.linkCount.toLocaleString()}</p>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
-                  <p className="text-slate-500 text-sm font-medium mb-2">Unique Visitors</p>
-                  <div className="flex items-end gap-2">
-                    <span className="text-3xl font-bold text-slate-900">{overview.uniqueVisitors.toLocaleString()}</span>
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 rounded-2xl shadow-soft dark:shadow-soft-dark">
+                  <div className="flex items-center gap-2 mb-3 text-zinc-500 dark:text-zinc-400">
+                    <span className="material-symbols-outlined text-lg">trending_up</span>
+                    <span className="text-sm font-medium">Conv. Rate</span>
                   </div>
-                </div>
-
-                <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
-                  <p className="text-slate-500 text-sm font-medium mb-2">Total Links</p>
-                  <div className="flex items-end gap-2">
-                    <span className="text-3xl font-bold text-slate-900">{overview.linkCount}</span>
-                  </div>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-white">{conversionRate}%</p>
                 </div>
               </section>
 
-              {/* Traffic Chart — line + area (full 30-day series so bars aren’t one giant block) */}
-              <section className="bg-white border border-slate-200 rounded-lg p-8">
-                <div className="flex justify-between items-center mb-6">
+              {/* Traffic Chart */}
+              <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-soft dark:shadow-soft-dark p-6 sm:p-8">
+                <div className="flex justify-between items-start mb-8">
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">Traffic Trends</h3>
-                    <p className="text-sm text-slate-500">Clicks per day over the last 30 days</p>
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white">Traffic Trends</h3>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Clicks per day over the last 30 days</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-slate-500">Peak day</p>
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Peak day</p>
+                    <p className="text-sm font-semibold text-zinc-900 dark:text-white">
                       {dailySeries.length
                         ? (() => {
-                            const peak = dailySeries.reduce(
-                              (a, b) => (b.clicks > a.clicks ? b : a),
-                              dailySeries[0],
-                            );
+                            const peak = dailySeries.reduce((a, b) => (b.clicks > a.clicks ? b : a), dailySeries[0]);
                             return `${peak.clicks} · ${peak.label.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`;
                           })()
                         : '—'}
@@ -367,18 +387,16 @@ const Analytics = () => {
                 </div>
 
                 {trafficChart && dailySeries.some((d) => d.clicks > 0) ? (
-                  <div className="relative w-full overflow-hidden rounded-lg border border-slate-100 bg-slate-50/50">
+                  <div className="relative w-full overflow-hidden rounded-xl bg-zinc-50/50 dark:bg-zinc-950/50 pt-4">
                     <svg
                       viewBox={`0 0 ${trafficChart.w} ${trafficChart.h}`}
-                      className="w-full h-auto min-h-[200px] block"
+                      className="w-full h-auto min-h-[240px] block"
                       preserveAspectRatio="xMidYMid meet"
-                      role="img"
-                      aria-label="Daily clicks over the last 30 days"
                     >
                       <defs>
                         <linearGradient id="trafficArea" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="rgb(15, 39, 132)" stopOpacity="0.18" />
-                          <stop offset="100%" stopColor="rgb(15, 39, 132)" stopOpacity="0.02" />
+                          <stop offset="0%" stopColor={chartFillColorStart} />
+                          <stop offset="100%" stopColor={chartFillColorEnd} />
                         </linearGradient>
                       </defs>
                       {[0, 0.5, 1].map((t) => {
@@ -391,7 +409,7 @@ const Analytics = () => {
                               y1={y}
                               x2={trafficChart.pad.left + trafficChart.innerW}
                               y2={y}
-                              stroke="#e2e8f0"
+                              stroke={theme === 'dark' ? '#3f3f46' : '#e4e4e7'}
                               strokeWidth="1"
                               strokeDasharray={t === 0 ? '0' : '4 4'}
                             />
@@ -399,7 +417,7 @@ const Analytics = () => {
                               x={trafficChart.pad.left - 4}
                               y={y + 4}
                               textAnchor="end"
-                              className="fill-slate-400"
+                              className="fill-zinc-400 dark:fill-zinc-500"
                               style={{ fontSize: 10 }}
                             >
                               {label}
@@ -410,8 +428,8 @@ const Analytics = () => {
                       <path d={trafficChart.areaPath} fill="url(#trafficArea)" />
                       <polyline
                         fill="none"
-                        stroke="rgb(15, 39, 132)"
-                        strokeWidth="2"
+                        stroke={chartStrokeColor}
+                        strokeWidth="2.5"
                         strokeLinejoin="round"
                         strokeLinecap="round"
                         points={trafficChart.linePts}
@@ -421,20 +439,20 @@ const Analytics = () => {
                           key={d.day}
                           cx={trafficChart.xAt(i)}
                           cy={trafficChart.yAt(d.clicks)}
-                          r={d.clicks > 0 ? 3.5 : 2}
-                          fill={d.clicks > 0 ? 'rgb(15, 39, 132)' : '#cbd5e1'}
-                          style={{ cursor: 'default' }}
+                          r={d.clicks > 0 ? 4 : 2}
+                          fill={d.clicks > 0 ? chartStrokeColor : (theme === 'dark' ? '#3f3f46' : '#e4e4e7')}
+                          stroke={theme === 'dark' ? '#18181b' : '#ffffff'}
+                          strokeWidth="2"
                         >
                           <title>
-                            {d.label.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}:{' '}
-                            {d.clicks} {d.clicks === 1 ? 'click' : 'clicks'}
+                            {d.label.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}: {d.clicks} clicks
                           </title>
                         </circle>
                       ))}
                       <text
                         x={trafficChart.pad.left}
                         y={trafficChart.h - 6}
-                        className="fill-slate-500"
+                        className="fill-zinc-400 dark:fill-zinc-500"
                         style={{ fontSize: 11 }}
                       >
                         {dailySeries[0]?.label.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
@@ -443,7 +461,7 @@ const Analytics = () => {
                         x={trafficChart.pad.left + trafficChart.innerW / 2}
                         y={trafficChart.h - 6}
                         textAnchor="middle"
-                        className="fill-slate-500"
+                        className="fill-zinc-400 dark:fill-zinc-500"
                         style={{ fontSize: 11 }}
                       >
                         Last 30 days
@@ -452,238 +470,209 @@ const Analytics = () => {
                         x={trafficChart.pad.left + trafficChart.innerW}
                         y={trafficChart.h - 6}
                         textAnchor="end"
-                        className="fill-slate-500"
+                        className="fill-zinc-400 dark:fill-zinc-500"
                         style={{ fontSize: 11 }}
                       >
-                        {dailySeries[dailySeries.length - 1]?.label.toLocaleDateString(undefined, {
-                          month: 'short',
-                          day: 'numeric',
-                        })}
+                        {dailySeries[dailySeries.length - 1]?.label.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                       </text>
                     </svg>
                   </div>
                 ) : (
-                  <div className="h-52 flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 text-slate-500 text-sm px-4 text-center">
-                    No daily clicks in the last 30 days yet. Share a link or use “Simulate click” to see the trend line.
+                  <div className="h-64 flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-500 dark:text-zinc-400 text-sm px-4 text-center">
+                    <span className="material-symbols-outlined text-3xl mb-2 text-zinc-300 dark:text-zinc-600">show_chart</span>
+                    No daily clicks in the last 30 days yet.
                   </div>
                 )}
               </section>
 
               {/* Two-column layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 {/* Top Referrers */}
-                <div className="lg:col-span-2 bg-white border border-slate-200 rounded-lg p-8">
-                  <div className="flex justify-between items-center mb-6">
-                    <div>
-                      <h3 className="text-lg font-bold text-slate-900">Top Referrers</h3>
-                      <p className="text-sm text-slate-500">Where your traffic comes from</p>
-                    </div>
-                  </div>
+                <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-soft dark:shadow-soft-dark p-6 sm:p-8">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Top Referrers</h3>
 
                   {referrers.length > 0 ? (
                     <div className="space-y-4">
-                      {referrers.map((ref, i) => (
-                        <div key={i} className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-slate-700 truncate max-w-xs">{ref.referrer || 'Direct'}</span>
-                          <span className="text-sm font-bold text-slate-900">{ref.count} clicks</span>
-                        </div>
-                      ))}
+                      {referrers.map((ref, i) => {
+                        const totalRefs = referrers.reduce((s, r) => s + r.count, 0) || 1;
+                        const pct = Math.round((ref.count / totalRefs) * 100);
+                        return (
+                          <div key={i} className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                                <img src={`https://www.google.com/s2/favicons?domain=${ref.referrer}&sz=32`} alt="" className="w-4 h-4 rounded-sm bg-zinc-100 dark:bg-zinc-800" onError={(e) => { e.target.style.display='none'; }} />
+                                {ref.referrer === 'Direct' ? 'Direct / Unknown' : ref.referrer}
+                              </span>
+                              <span className="text-sm font-bold text-zinc-900 dark:text-white">{ref.count} <span className="font-normal text-zinc-500 text-xs ml-1">({pct}%)</span></span>
+                            </div>
+                            <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                              <div className="h-full bg-blue-500 rounded-full" style={{ width: `${pct}%` }}></div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
-                    <p className="text-slate-400 text-sm">No referrer data yet</p>
+                    <div className="text-center py-10 text-zinc-400 dark:text-zinc-500 text-sm">No referrer data yet</div>
                   )}
                 </div>
 
                 {/* Device Breakdown */}
-                <div className="bg-white border border-slate-200 rounded-lg p-8">
-                  <h3 className="text-lg font-bold text-slate-900 mb-6">Devices</h3>
-                  <div className="space-y-6">
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                          <span className="material-symbols-outlined text-sm">smartphone</span>
-                          Mobile
-                        </span>
-                        <span className="text-sm font-bold text-slate-900">{mobilePercent}%</span>
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-soft dark:shadow-soft-dark p-6 sm:p-8">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Devices</h3>
+                  
+                  {deviceTotal > 1 || devices.mobile > 0 ? (
+                    <div className="flex flex-col items-center">
+                      <div className="relative w-36 h-36 mb-6">
+                        <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                          <circle cx="18" cy="18" fill="transparent" r="16" className="stroke-zinc-100 dark:stroke-zinc-800" strokeWidth="4"></circle>
+                          <circle cx="18" cy="18" fill="transparent" r="16" className="stroke-blue-500" strokeDasharray={`${mobilePercent}, 100`} strokeWidth="4"></circle>
+                          <circle cx="18" cy="18" fill="transparent" r="16" className="stroke-indigo-500" strokeDasharray={`${desktopPercent}, 100`} strokeDashoffset={`-${mobilePercent}`} strokeWidth="4"></circle>
+                          <circle cx="18" cy="18" fill="transparent" r="16" className="stroke-zinc-300 dark:stroke-zinc-600" strokeDasharray={`${tabletPercent}, 100`} strokeDashoffset={`-${mobilePercent + desktopPercent}`} strokeWidth="4"></circle>
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <span className="text-2xl font-bold text-zinc-900 dark:text-white">{mobilePercent}%</span>
+                        </div>
                       </div>
-                      <div className="h-2.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-primary rounded-full" style={{ width: `${mobilePercent}%` }}></div>
-                      </div>
-                    </div>
 
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                          <span className="material-symbols-outlined text-sm">desktop_windows</span>
-                          Desktop
-                        </span>
-                        <span className="text-sm font-bold text-slate-900">{desktopPercent}%</span>
-                      </div>
-                      <div className="h-2.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-primary rounded-full" style={{ width: `${desktopPercent}%` }}></div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                          <span className="material-symbols-outlined text-sm">tablet_mac</span>
-                          Tablet
-                        </span>
-                        <span className="text-sm font-bold text-slate-900">{tabletPercent}%</span>
-                      </div>
-                      <div className="h-2.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-primary rounded-full" style={{ width: `${tabletPercent}%` }}></div>
+                      <div className="w-full space-y-3">
+                        {[
+                          { label: 'Mobile', count: devices.mobile.toLocaleString(), color: 'bg-blue-500' },
+                          { label: 'Desktop', count: devices.desktop.toLocaleString(), color: 'bg-indigo-500' },
+                          { label: 'Tablet', count: devices.tablet.toLocaleString(), color: 'bg-zinc-300 dark:bg-zinc-600' },
+                        ].map((item, i) => (
+                          <div key={i} className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className={`w-2.5 h-2.5 rounded-full ${item.color}`}></div>
+                              <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{item.label}</span>
+                            </div>
+                            <span className="text-sm font-semibold text-zinc-900 dark:text-white">{item.count}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="text-center py-10 text-zinc-400 dark:text-zinc-500 text-sm">No device data yet</div>
+                  )}
                 </div>
               </div>
 
               {/* Browsers & OS */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-white border border-slate-200 rounded-lg p-8">
-                  <h3 className="text-lg font-bold text-slate-900 mb-6">Top Browsers</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-soft dark:shadow-soft-dark p-6 sm:p-8">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Top Browsers</h3>
                   {browsers.length > 0 ? (
                     <div className="space-y-4">
-                      {browsers.map((b, i) => (
-                        <div key={i} className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-slate-700">{b.browser}</span>
-                          <div className="flex items-center gap-3">
-                            <div className="w-32 h-2 bg-slate-200 rounded-full overflow-hidden">
-                              <div className="h-full bg-primary rounded-full" style={{ width: `${(b.count / totalBrowsers) * 100}%` }}></div>
+                      {browsers.map((b, i) => {
+                        const pct = Math.round((b.count / totalBrowsers) * 100);
+                        return (
+                          <div key={i} className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{b.browser}</span>
+                            <div className="flex items-center gap-4">
+                              <div className="w-24 sm:w-32 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                                <div className="h-full bg-zinc-400 dark:bg-zinc-500 rounded-full" style={{ width: `${pct}%` }}></div>
+                              </div>
+                              <span className="text-sm font-bold text-zinc-900 dark:text-white w-8 text-right">{pct}%</span>
                             </div>
-                            <span className="text-sm font-bold text-slate-900 w-12 text-right">{Math.round((b.count / totalBrowsers) * 100)}%</span>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
-                    <p className="text-slate-400 text-sm">No browser data yet</p>
+                    <p className="text-zinc-400 dark:text-zinc-500 text-sm text-center py-6">No browser data yet</p>
                   )}
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-lg p-8">
-                  <h3 className="text-lg font-bold text-slate-900 mb-6">Operating Systems</h3>
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-soft dark:shadow-soft-dark p-6 sm:p-8">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6">Operating Systems</h3>
                   {os.length > 0 ? (
                     <div className="space-y-4">
-                      {os.map((o, i) => (
-                        <div key={i} className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-slate-700">{o.os}</span>
-                          <div className="flex items-center gap-3">
-                            <div className="w-32 h-2 bg-slate-200 rounded-full overflow-hidden">
-                              <div className="h-full bg-primary rounded-full" style={{ width: `${(o.count / totalOS) * 100}%` }}></div>
+                      {os.map((o, i) => {
+                        const pct = Math.round((o.count / totalOS) * 100);
+                        return (
+                          <div key={i} className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{o.os}</span>
+                            <div className="flex items-center gap-4">
+                              <div className="w-24 sm:w-32 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                                <div className="h-full bg-zinc-400 dark:bg-zinc-500 rounded-full" style={{ width: `${pct}%` }}></div>
+                              </div>
+                              <span className="text-sm font-bold text-zinc-900 dark:text-white w-8 text-right">{pct}%</span>
                             </div>
-                            <span className="text-sm font-bold text-slate-900 w-12 text-right">{Math.round((o.count / totalOS) * 100)}%</span>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
-                    <p className="text-slate-400 text-sm">No OS data yet</p>
+                    <p className="text-zinc-400 dark:text-zinc-500 text-sm text-center py-6">No OS data yet</p>
                   )}
                 </div>
               </div>
 
               {/* World Map */}
-              <section className="bg-white border border-slate-200 rounded-lg p-8">
+              <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-soft dark:shadow-soft-dark p-6 sm:p-8">
                 <div className="flex justify-between items-center mb-6">
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">Geographic Distribution</h3>
-                    <p className="text-sm text-slate-500">Clicks by country</p>
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white">Locations</h3>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Clicks by country</p>
                   </div>
                 </div>
 
-                <div className="h-96 w-full">
+                <div className="h-[400px] w-full rounded-xl overflow-hidden bg-zinc-50 dark:bg-zinc-950/50">
                   {countries.length > 0 ? (
-                    <div>
-                      <ComposableMap
-                        projection="geoMercator"
-                        projectionConfig={{
-                          scale: 100,
-                          center: [0, 20]
-                        }}
-                        width={800}
-                        height={400}
-                        style={{ width: "100%", height: "100%" }}
-                      >
-                        <Geographies geography="/world-110m.json">
-                          {({ geographies }) =>
-                            geographies.map((geo) => {
-                              const countryData = countriesByNumericId.get(String(geo.id));
-                              const clicks = countryData?.count || 0;
-                              const fillColor = clicks > 0
-                                ? `rgba(59, 130, 246, ${0.2 + (clicks / maxCountryClicks) * 0.8})`
-                                : '#f1f5f9';
+                    <ComposableMap
+                      projection="geoMercator"
+                      projectionConfig={{ scale: 130, center: [0, 20] }}
+                      style={{ width: "100%", height: "100%" }}
+                    >
+                      <Geographies geography="/world-110m.json">
+                        {({ geographies }) =>
+                          geographies.map((geo) => {
+                            const countryData = countriesByNumericId.get(String(geo.id));
+                            const clicks = countryData?.count || 0;
+                            const fillColor = clicks > 0
+                              ? (theme === 'dark' 
+                                  ? `rgba(59, 130, 246, ${0.3 + (clicks / maxCountryClicks) * 0.7})` 
+                                  : `rgba(59, 130, 246, ${0.2 + (clicks / maxCountryClicks) * 0.8})`)
+                              : mapFillBase;
 
-                              return (
-                                <Geography
-                                  key={geo.rsmKey}
-                                  geography={geo}
-                                  fill={fillColor}
-                                  stroke="#e2e8f0"
-                                  strokeWidth={0.5}
-                                  style={{
-                                    default: { outline: 'none', cursor: 'pointer' },
-                                    hover: { outline: 'none', fill: '#3b82f6', cursor: 'pointer' },
-                                    pressed: { outline: 'none' },
-                                  }}
-                                  onMouseEnter={(event) => {
-                                    const countryClicks = countriesByNumericId.get(String(geo.id))?.count || 0;
-                                    if (countryClicks > 0) {
-                                      event.target.style.fill = '#1e40af';
-                                    }
-                                  }}
-                                  onMouseLeave={(event) => {
-                                    const clicks = countriesByNumericId.get(String(geo.id))?.count || 0;
-                                    const fillColor = clicks > 0
-                                      ? `rgba(59, 130, 246, ${0.2 + (clicks / maxCountryClicks) * 0.8})`
-                                      : '#f1f5f9';
-                                    event.target.style.fill = fillColor;
-                                  }}
-                                />
-                              );
-                            })
-                          }
-                        </Geographies>
-                      </ComposableMap>
-                    </div>
+                            return (
+                              <Geography
+                                key={geo.rsmKey}
+                                geography={geo}
+                                fill={fillColor}
+                                stroke={mapStrokeColor}
+                                strokeWidth={0.5}
+                                style={{
+                                  default: { outline: 'none', cursor: 'pointer', transition: 'all 250ms' },
+                                  hover: { outline: 'none', fill: '#3b82f6', cursor: 'pointer' },
+                                  pressed: { outline: 'none' },
+                                }}
+                              />
+                            );
+                          })
+                        }
+                      </Geographies>
+                    </ComposableMap>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-slate-400 text-sm">
-                      No geographic data yet. Start sharing your links to see traffic from different countries!
+                    <div className="h-full flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm">
+                      No geographic data yet.
                     </div>
                   )}
                 </div>
 
-                {/* Color Legend */}
                 {countries.length > 0 && (
-                  <div className="mt-6 flex items-center justify-center gap-4 pb-4">
-                    <span className="text-xs font-medium text-slate-600">Traffic Intensity:</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded" style={{backgroundColor: 'rgba(59, 130, 246, 0.2)'}}></div>
-                      <span className="text-xs text-slate-600">Low</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded" style={{backgroundColor: 'rgba(59, 130, 246, 0.5)'}}></div>
-                      <span className="text-xs text-slate-600">Medium</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded" style={{backgroundColor: 'rgba(59, 130, 246, 1)'}}></div>
-                      <span className="text-xs text-slate-600">High</span>
-                    </div>
-                  </div>
-                )}
-
-                {countries.length > 0 && (
-                  <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-slate-200 pt-6">
-                    <h4 className="col-span-full text-sm font-semibold text-slate-700">Top Countries by Clicks</h4>
+                  <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
                     {countries.slice(0, 8).map((country, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded">
-                        <span className="text-sm font-medium text-slate-700">{country.country}</span>
-                        <div className="flex flex-col items-end">
-                          <span className="text-sm font-bold text-slate-900">{country.count}</span>
-                          <span className="text-xs text-slate-500">{country.percent}%</span>
+                      <div key={i} className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-800">
+                        <div className="flex items-center gap-2 truncate">
+                          <img 
+                            src={`https://flagcdn.com/24x18/${isoCountries.alpha3ToAlpha2(isoCountries.numericToAlpha3(isoCountries.alpha2ToNumeric(country.country)))?.toLowerCase()}.png`} 
+                            alt="" className="w-4 h-3 rounded-sm object-cover" 
+                            onError={(e) => { e.target.style.display='none'; }} 
+                          />
+                          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 truncate" title={country.country}>{country.country}</span>
                         </div>
+                        <span className="text-sm font-bold text-zinc-900 dark:text-white shrink-0 ml-2">{country.count}</span>
                       </div>
                     ))}
                   </div>

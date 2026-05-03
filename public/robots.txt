@@ -5,4 +5,4 @@ Disallow: /settings
 Disallow: /profile
 Disallow: /links
 
-Sitemap: https://curator.link/sitemap.xml
+Sitemap: https://curattor.netlify.app/sitemap.xml

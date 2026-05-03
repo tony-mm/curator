@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 
 const corsHeaders = {
@@ -18,10 +19,13 @@ const getIpFromRequest = (req: Request) => {
 const lookupCountry = async (ip: string) => {
   if (!ip) return 'Unknown';
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1500);
     const resp = await fetch(`https://ipapi.co/${ip}/json/`, {
       headers: { 'User-Agent': 'curator-edge/1.0' },
-      signal: AbortSignal.timeout(1500),
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     if (!resp.ok) return 'Unknown';
     const data = await resp.json();
     return data?.country_code || 'Unknown';

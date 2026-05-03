@@ -4,33 +4,6 @@ import { AuthContext } from '../context/AuthContext';
 import { supabase } from '../utils/supabaseClient';
 import { buildShortUrl, createLink } from '../utils/linksService';
 
-const tiers = [
-  {
-    name: 'Free',
-    price: '$0',
-    period: 'month',
-    features: ['1,000 links/month', 'Basic analytics', 'Community support'],
-    cta: 'Get Started',
-    highlighted: false,
-  },
-  {
-    name: 'Pro',
-    price: '$12',
-    period: 'month',
-    features: ['Unlimited links', 'Advanced analytics', 'Priority support', 'Custom domains', 'QR codes'],
-    cta: 'Start Free Trial',
-    highlighted: true,
-  },
-  {
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    features: ['Everything in Pro', 'SSO & 2FA', 'Dedicated account manager', 'SLA guarantee', 'Custom integrations'],
-    cta: 'Contact Sales',
-    highlighted: false,
-  },
-];
-
 const Landing = () => {
   const [url, setUrl] = useState('');
   const [alias, setAlias] = useState('');
@@ -38,7 +11,6 @@ const Landing = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showPricing, setShowPricing] = useState(false);
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, user } = useContext(AuthContext);
@@ -117,7 +89,6 @@ const Landing = () => {
                     </div>
                   )}
               </div>
-              <button onClick={() => setShowPricing(true)} className="text-slate-300 hover:text-white transition-colors">Pricing</button>
               <Link to="/login" className="text-slate-300 hover:text-white transition-colors">Login</Link>
               <Link to="/signup" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-500 transition-colors">Sign Up</Link>
             </div>
@@ -150,79 +121,12 @@ const Landing = () => {
                   </div>
                 )}
               </div>
-              <button onClick={() => { setShowPricing(true); setMobileMenuOpen(false); }} className="block text-slate-300 hover:text-white text-left w-full">Pricing</button>
               <Link to="/login" className="block text-slate-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>Login</Link>
               <Link to="/signup" className="block bg-blue-600 text-white px-6 py-3 rounded-lg text-center" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
             </div>
           </div>
         )}
       </nav>
-
-      {/* Pricing Modal */}
-      {showPricing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setShowPricing(false)}>
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
-            <div className="p-10">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-3xl font-outfit font-bold text-white">Pricing</h2>
-                <button onClick={() => setShowPricing(false)} className="text-slate-400 hover:text-white">
-                  <span className="material-symbols-outlined text-3xl">close</span>
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {tiers.map((tier) => (
-                  <div
-                    key={tier.name}
-                    className={`rounded-xl p-8 ${
-                      tier.highlighted
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'bg-slate-700 text-slate-100 border border-slate-600'
-                    }`}
-                  >
-                    <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
-                    <div className="mb-6">
-                      <span className="text-4xl font-bold">{tier.price}</span>
-                      {tier.period && <span className="text-sm opacity-80">/{tier.period}</span>}
-                    </div>
-                    <ul className="space-y-3 mb-8">
-                      {tier.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm">
-                          <span className="material-symbols-outlined text-sm">{tier.highlighted ? 'check_circle' : 'check_circle_outline'}</span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    {tier.name === 'Enterprise' ? (
-                      <button
-                        className={`w-full py-3 rounded-lg font-medium ${
-                          tier.highlighted
-                            ? 'bg-white text-blue-600 hover:bg-slate-100'
-                            : 'bg-slate-600 text-white hover:bg-slate-500'
-                        }`}
-                        onClick={() => setShowPricing(false)}
-                      >
-                        {tier.cta}
-                      </button>
-                    ) : (
-                      <Link
-                        to="/signup"
-                        onClick={() => setShowPricing(false)}
-                        className={`block w-full py-3 rounded-lg font-medium text-center ${
-                          tier.highlighted
-                            ? 'bg-white text-blue-600 hover:bg-slate-100'
-                            : 'bg-slate-600 text-white hover:bg-slate-500'
-                        }`}
-                      >
-                        {tier.cta}
-                      </Link>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Main Content */}
       <main className="flex-1 pt-32 pb-24 px-6">

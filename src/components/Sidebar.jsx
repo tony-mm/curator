@@ -57,14 +57,6 @@ const Sidebar = () => {
             </>
           )}
         </NavLink>
-        <NavLink to="/pricing" className={navLinkClass}>
-          {({ isActive }) => (
-            <>
-              <span className="material-symbols-outlined text-lg">attach_money</span>
-              <span>Pricing</span>
-            </>
-          )}
-        </NavLink>
         <NavLink to="/settings" className={navLinkClass}>
           {({ isActive }) => (
             <>

@@ -3,7 +3,6 @@ import Landing from './components/Landing';
 import Dashboard from './components/Dashboard';
 import Analytics from './components/Analytics';
 import Links from './components/Links';
-import Pricing from './components/Pricing';
 import Settings from './components/Settings';
 import Profile from './components/Profile';
 import Login from './components/Login';
@@ -34,7 +33,6 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
         <Route path="/links" element={<ProtectedRoute><Links /></ProtectedRoute>} />
-        <Route path="/pricing" element={<ProtectedRoute><Pricing /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />

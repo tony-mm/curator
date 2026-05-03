@@ -37,6 +37,7 @@ const Links = () => {
   const [editingUrl, setEditingUrl] = useState('');
   const [editingAlias, setEditingAlias] = useState('');
   
+  const [searchQuery, setSearchQuery] = useState('');
 
 
   const filteredLinks = links.filter(link => {

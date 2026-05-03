@@ -10,11 +10,7 @@ import { buildShortUrl, createLink } from '../utils/linksService';
 
 isoCountries.registerLocale(enLocale);
 
-const SIMULATE_CLICK_COUNTRY_OPTIONS = Object.entries(
-  isoCountries.getNames('en', { select: 'official' }),
-)
-  .map(([code, name]) => ({ code, name }))
-  .sort((a, b) => a.name.localeCompare(b.name, 'en'));
+
 
 const Links = () => {
   const { user } = useContext(AuthContext);
@@ -41,26 +37,7 @@ const Links = () => {
   const [editingUrl, setEditingUrl] = useState('');
   const [editingAlias, setEditingAlias] = useState('');
   
-  // Test click state
-  const [testCountry, setTestCountry] = useState('US');
-  const [testingLink, setTestingLink] = useState(null);
-  const [testCountrySearch, setTestCountrySearch] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
 
-  const simulateCountryOptionsShown = useMemo(() => {
-    const q = testCountrySearch.trim().toLowerCase();
-    let list = q
-      ? SIMULATE_CLICK_COUNTRY_OPTIONS.filter(
-          ({ code, name }) =>
-            code.toLowerCase().includes(q) || name.toLowerCase().includes(q),
-        )
-      : SIMULATE_CLICK_COUNTRY_OPTIONS;
-    if (!list.some((c) => c.code === testCountry)) {
-      const selected = SIMULATE_CLICK_COUNTRY_OPTIONS.find((c) => c.code === testCountry);
-      if (selected) list = [selected, ...list];
-    }
-    return list;
-  }, [testCountrySearch, testCountry]);
 
   const filteredLinks = links.filter(link => {
     const q = searchQuery.trim().toLowerCase();
@@ -203,29 +180,7 @@ const Links = () => {
     });
   };
 
-  const simulateTestClick = async (link) => {
-    try {
-      const visitorId = localStorage.getItem('visitorId') || crypto.randomUUID();
-      localStorage.setItem('visitorId', visitorId);
-      const { error } = await supabase.functions.invoke('track-click', {
-        body: {
-          short_code: link.shortCode,
-          country: testCountry,
-          visitor_id: visitorId,
-          user_agent: 'Test Client',
-          referrer: 'test',
-        },
-      });
-      if (error) throw error;
-      toast.success(`Simulated click from ${testCountry}!`);
-      setShowTestUtil(false);
-      setTestingLink(null);
-      loadLinks();
-    } catch (err) {
-      console.error('[SIMULATE CLICK ERROR]', err);
-      toast.error(err.message);
-    }
-  };
+
 
   const loadQRCode = async (link) => {
     try {
@@ -373,9 +328,6 @@ const Links = () => {
                       <div className="flex items-center gap-1">
                         <button onClick={() => loadQRCode(link)} className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors" title="QR Code">
                           <span className="material-symbols-outlined text-[20px]">qr_code_2</span>
-                        </button>
-                        <button onClick={() => { setTestingLink(link); setTestCountrySearch(''); setShowTestUtil(true); }} className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Test Analytics">
-                          <span className="material-symbols-outlined text-[20px]">bug_report</span>
                         </button>
                         <button onClick={() => openEditModal(link)} className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors" title="Edit">
                           <span className="material-symbols-outlined text-[20px]">edit</span>
@@ -617,64 +569,7 @@ const Links = () => {
           </div>
         )}
 
-        {/* Test Click Utility Modal */}
-        {showTestUtil && testingLink && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
-            <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowTestUtil(false)}></div>
-            <div className="relative bg-white dark:bg-zinc-900 rounded-2xl w-full max-w-md shadow-2xl animate-fade-in overflow-hidden border border-zinc-200 dark:border-zinc-800">
-              <div className="px-6 py-5 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight">Simulate Click</h2>
-                <button onClick={() => setShowTestUtil(false)} className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                  <span className="material-symbols-outlined text-[20px]">close</span>
-                </button>
-              </div>
-              
-              <div className="p-6">
-                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-5">
-                  Simulate a click from a specific country to test geographic analytics for <span className="font-semibold text-zinc-900 dark:text-white">{testingLink.shortCode}</span>.
-                </p>
-                
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Search Country</label>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">search</span>
-                      <input
-                        type="search"
-                        value={testCountrySearch}
-                        onChange={(e) => setTestCountrySearch(e.target.value)}
-                        placeholder="Search by name or code..."
-                        className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl py-2 pl-9 pr-3 text-sm text-zinc-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all shadow-sm"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Select Origin</label>
-                    <select
-                      value={testCountry}
-                      onChange={(e) => setTestCountry(e.target.value)}
-                      className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl py-2 px-3 text-sm text-zinc-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all shadow-sm"
-                    >
-                      {simulateCountryOptionsShown.map(({ code, name }) => (
-                        <option key={code} value={code}>
-                          {name} ({code})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                
-                <button
-                  className="w-full bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 py-2.5 rounded-xl text-sm font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all shadow-soft flex justify-center items-center gap-2"
-                  onClick={() => simulateTestClick(testingLink)}
-                >
-                  <span className="material-symbols-outlined text-[18px]">play_arrow</span>
-                  Simulate Visit
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+
       </main>
     </div>
   );
